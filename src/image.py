@@ -2,13 +2,39 @@ import pygame
 
 
 class Image(pygame.sprite.Sprite):
-    def __init__(self, path, size):
+    def __init__(self, pathFmt, pathIndex, pos, size=None, pathIndexCount=0):
         super().__init__()  # 调用父类的构造函数
-        self.path = path
-        self.image = pygame.image.load(self.path)
+        self.pathFmt = pathFmt
+        self.pathIndex = pathIndex
+        self.pathIndexCount = pathIndexCount
+        self.pos = list(pos)
         self.size = size
-        self.rect = self.image.get_rect()  # 更新实例的矩形区域
-        self.image = pygame.transform.scale(self.image, self.size)
+        self.updateimage()
+
+    def updateimage(self):
+        path = self.pathFmt
+        if self.pathIndex:
+            path = path % self.pathIndex
+        self.image = pygame.image.load(path)
+        if self.size:
+            self.image = pygame.transform.scale(self.image, self.size)
+
+    def updateIndex(self, pathIndex):
+        self.pathIndex = pathIndex
+        self.updateimage
+
+    def updatasize(self, size):
+        self.size = size
+        self.updateimage()
+
+    def getRect(self):
+        rect = self.image.get_rect()
+        rect.x = self.pos[0]
+        rect.y = self.pos[1]
+        return rect
+
+    def doLeft(self):
+        self.pos[0] -= 0.01
 
     def draw(self, ds):
-        ds.blit(self.image, self.rect)
+        ds.blit(self.image, self.getRect())
