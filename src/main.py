@@ -8,14 +8,13 @@ import image
 if __name__ == '__main__':
     pygame.init();
     DS = pygame.display.set_mode((1280, 600))
-    image = pygame.image.load('pic/other/back.png')
 
-    # image = image.Image('pic/other/peabullet.png', (1280, 600))
+    image = image.Image('pic/other/back.png', (1280, 600))
     while True:
         for event in pygame.event.get():
             if event.type == QUIT:
+                pygame.quit()
                 sys.exit()
         DS.fill((128, 128, 128))
-        DS.blit(image, image.get_rect())
-        # image.draw(DS)
-    pygame.display.update()
+        image.draw(DS)
+        pygame.display.update()

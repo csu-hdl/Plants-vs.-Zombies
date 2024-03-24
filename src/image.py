@@ -2,8 +2,8 @@ import pygame
 
 
 class Image(pygame.sprite.Sprite):
-    def __int__(self, path, size):
-        # super().__init__()  # 调用父类的构造函数
+    def __init__(self, path, size):
+        super().__init__()  # 调用父类的构造函数
         self.path = path
         self.image = pygame.image.load(self.path)
         self.size = size
