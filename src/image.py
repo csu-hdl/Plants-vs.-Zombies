@@ -1,5 +1,5 @@
 import pygame
-
+import const
 
 class Image(pygame.sprite.Sprite):
     def __init__(self, pathFmt, pathIndex, pos, size=None, pathIndexCount=0):
@@ -20,7 +20,6 @@ class Image(pygame.sprite.Sprite):
             self.image = pygame.transform.scale(self.image, self.size)
 
     def updateIndex(self, pathIndex):
-
         self.pathIndex = pathIndex
         if self.pathIndex == 0:
             self.pathIndex += 1
@@ -37,7 +36,7 @@ class Image(pygame.sprite.Sprite):
         return rect
 
     def doLeft(self):
-        self.pos[0] -= 0.01
+        self.pos[0] -= const.ZOMBIE_SPEED
 
     def draw(self, ds):
         ds.blit(self.image, self.getRect())
