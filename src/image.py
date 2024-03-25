@@ -1,42 +1,48 @@
 import pygame
-import const
 
 class Image(pygame.sprite.Sprite):
-    def __init__(self, pathFmt, pathIndex, pos, size=None, pathIndexCount=0):
-        super().__init__()  # 调用父类的构造函数
+    def __init__(self, parent, pathFmt, pathIndex, pos, size=None, pathIndexCount=0):
+        super(Image, self).__init__()
+        self.parent = parent
         self.pathFmt = pathFmt
         self.pathIndex = pathIndex
-        self.pathIndexCount = pathIndexCount
         self.pos = list(pos)
         self.size = size
-        self.updateimage()
-
-    def updateimage(self):
+        self.image = None
+        self.pathIndexCount = pathIndexCount
+        self.updateImage()
+    
+    def getAbsolutePos(self):
+        pos = self.pos
+        if self.parent:
+            pos = (pos[0] + self.parent.pos[0], pos[1] + self.parent.pos[1] )
+        return pos
+    
+    def updateImage(self):
         path = self.pathFmt
-        if self.pathIndex:
+        if self.pathIndexCount != 0:
             path = path % self.pathIndex
         self.image = pygame.image.load(path)
         if self.size:
             self.image = pygame.transform.scale(self.image, self.size)
-
-    def updateIndex(self, pathIndex):
-        self.pathIndex = pathIndex
-        if self.pathIndex == 0:
-            self.pathIndex += 1
-        self.updateimage()
-
-    def updatasize(self, size):
-        self.size = size
-        self.updateimage()
-
+    
     def getRect(self):
         rect = self.image.get_rect()
-        rect.x = self.pos[0]
-        rect.y = self.pos[1]
+        rect.x, rect.y = self.getAbsolutePos()
         return rect
+    
+    def updateIndex(self, pathIndex):
+        self.pathIndex = pathIndex
+        self.updateImage()
 
-    def doLeft(self):
-        self.pos[0] -= const.ZOMBIE_SPEED
+    def updateSize(self, size):
+        self.size = size
+        self.updateImage()
 
-    def draw(self, ds):
-        ds.blit(self.image, self.getRect())
+    def draw(self, surface):
+        rect = self.image.get_rect()
+        rect.x, rect.y = self.getAbsolutePos()
+        surface.blit(self.image, rect)
+    
+    def update(self):
+        pass
